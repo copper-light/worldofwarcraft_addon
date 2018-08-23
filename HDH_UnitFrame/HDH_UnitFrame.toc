@@ -1,0 +1,7 @@
+﻿## Interface: 80000
+## Title: HDH_UnitFrame
+## Author: hdh
+## Notes: 유닛프레임 체력바 확대, 색상 변환
+## Version: 800.0
+## SavedVariablesPerCharacter: DB_UF
+HDH_UnitFrame.lua
