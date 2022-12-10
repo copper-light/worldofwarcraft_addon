@@ -699,7 +699,7 @@ local function HDH_SetRowData(rowFrame, key, no, id, name, always, texture, isIt
 end
 
 local function HDH_ClearRowData(rowFrame)
-	_G[rowFrame:GetName().."ButtonIcon"]:SetNormalTexture(nil)
+	_G[rowFrame:GetName().."ButtonIcon"]:SetNormalTexture(0)
 	_G[rowFrame:GetName().."TextNum"]:SetText(nil)
 	_G[rowFrame:GetName().."TextName"]:SetText(nil)
 	_G[rowFrame:GetName().."RowDesc"]:Show()
@@ -1272,8 +1272,9 @@ function HDH_LoadTabSpec()
 			if not id then 
 				TAB_TALENT[i]:Hide() 
 				-- break 
+			else
+				TAB_TALENT[i]:SetNormalTexture(icon)
 			end
-			TAB_TALENT[i]:SetNormalTexture(icon)
 		end
 	end
 	HDH_ChangeTalentTab(TAB_TALENT[CurSpec], CurSpec)
@@ -3237,8 +3238,7 @@ function HDH_Option_OnShow(self)
 end
 
 function HDH_Option_OnLoad(self)
-	self:SetMinResize(FRAME_W, MIN_H) 
-	self:SetMaxResize(FRAME_W, MAX_H)
+	self:SetResizeBounds(FRAME_W, MIN_H, FRAME_W, MAX_H) ;
 	
 	SETTING_CONTENTS_FRAME = SettingFrameSFContents;
 	ListFrame = _G[UnitOptionFrame:GetName().."SFContents"];

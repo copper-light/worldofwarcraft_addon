@@ -6,10 +6,6 @@ local L_POWRE_RUNE = "자원:룬";
 HDH_POWER = {}
 HDH_POWER[L_POWRE_RUNE] 	= {power_type="RUNE", 	power_index = 5,	color={1.00, 0.50, 0.25}, texture = "Interface\\Icons\\Spell_Deathknight_FrostPresence"};
 
-local TALENT_TEXTURE = {"Interface\\Icons\\Spell_Deathknight_BloodPresence"
-						,"Interface\\Icons\\Spell_Deathknight_FrostPresence"
-						,"Interface\\Icons\\Spell_Deathknight_UnholyPresence"};
-
 if MyClass == "DEATHKNIGHT" then
 	HDH_TRACKER_LIST[#HDH_TRACKER_LIST+1] = L_POWRE_RUNE -- 유닛은 명확하게는 추적 타입으로 보는게 맞지만 at 에서 이미 그렇게 사용하기 때문에 그냥 유닛 리스트로 넣어서 사용함
 	HDH_GET_CLASS_NAME[L_POWRE_RUNE] = "HDH_DK_RUNE_TRACKER";
@@ -29,13 +25,12 @@ do  -- HDH_DK_RUNE_TRACKER class
 	local function DK_OnUpdateCooldown(self)
 		local spell = self:GetParent():GetParent().spell
 		if not spell then self:Hide() return end
-		local remaining;
 		
 		spell.curTime = GetTime()
 		if spell.curTime - (spell.delay or 0) < HDH_TRACKER.ONUPDATE_FRAME_TERM then return end -- 10프레임
 		spell.delay = spell.curTime
-		remaining = spell.endTime - spell.curTime
-		spell.remaining = (remaining > spell.duration) and spell.duration or remaining
+		spell.remaining = spell.endTime - spell.curTime
+
 		if spell.remaining > 0 and spell.duration > 0 then
 			self:GetParent():GetParent():GetParent().parent:UpdateTimeText(self:GetParent():GetParent().timetext, spell.remaining);
 			if  self:GetParent():GetParent():GetParent().parent.option.base.cooldown ~= HDH_TRACKER.COOLDOWN_CIRCLE then
@@ -52,11 +47,12 @@ do  -- HDH_DK_RUNE_TRACKER class
 		if not talent then return end 	
 		talent[self.name] = {}
 		local auraList = talent[self.name]
+	
 		for i = 1 , MAX_RUNES do
 			local new = {}
 			new.Key = HDH_POWER[self.type].power_type..i
 			new.Name = HDH_POWER[self.type].power_type..i
-			new.Texture = TALENT_TEXTURE[spec];
+			new.Texture = HDH_POWER[self.type].texture
 			new.No = i
 			new.ID = 0
 			new.Always = true
@@ -228,16 +224,14 @@ do  -- HDH_DK_RUNE_TRACKER class
 	
 	function HDH_DK_RUNE_TRACKER:UpdateRune(runeIndex, isEnergize)
 		local ret = false;
-		local start, duration, runeReady = GetRuneCooldown(runeIndex)
-		local remaining = 0;
+		local start, duration, runeReady = GetRuneCooldown(runeIndex);
 		if self and self.frame.pointer[runeIndex] then
 			local spell = self.frame.pointer[runeIndex].spell
 			if start and spell then
 				spell.duration = duration
 				spell.startTime = start
 				spell.endTime = start + duration
-				remaining = spell.endTime - GetTime()
-				spell.remaining = (remaining > duration) and duration or remaining
+				spell.remaining = spell.endTime - GetTime()
 			else
 				spell.duration = 0
 				spell.startTime = 0
@@ -342,7 +336,7 @@ do  -- HDH_DK_RUNE_TRACKER class
 			
 			self.frame:SetScript("OnEvent", self.OnEvent)
 			self.frame:RegisterEvent("RUNE_POWER_UPDATE");
-			--self.frame:RegisterEvent("RUNE_TYPE_UPDATE");
+			self.frame:RegisterEvent("RUNE_TYPE_UPDATE");
 			self.frame:RegisterEvent('UNIT_MAXPOWER')
 			self:Update()
 		else
@@ -360,19 +354,18 @@ do  -- HDH_DK_RUNE_TRACKER class
 		if not self.parent then return end
 		if ( event == "RUNE_POWER_UPDATE" ) then
 			local runeIndex, isEnergize = ...;
-			self.parent:Update();
 			if runeIndex and runeIndex >= 1 and runeIndex <= MAX_RUNES then
 				-- self.parent:UpdateRune(runeIndex, isEnergize)
 				-- self.parent:UpdateIcon(runeIndex)
-				
+				self.parent:Update();
 			end
-		-- elseif ( event == "RUNE_TYPE_UPDATE" ) then
-		-- 	local runeIndex = ...;
-		-- 	if ( runeIndex and runeIndex >= 1 and runeIndex <= MAX_RUNES ) then
-		-- 		-- self.parent:UpdateRuneType(runeIndex)
-		-- 		-- self.parent:UpdateIcon(runeIndex)
-		-- 		self.parent:Update();
-		-- 	end
+		elseif ( event == "RUNE_TYPE_UPDATE" ) then
+			local runeIndex = ...;
+			if ( runeIndex and runeIndex >= 1 and runeIndex <= MAX_RUNES ) then
+				-- self.parent:UpdateRuneType(runeIndex)
+				-- self.parent:UpdateIcon(runeIndex)
+				self.parent:Update();
+			end
 		end
 	end
 	

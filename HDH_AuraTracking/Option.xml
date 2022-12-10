@@ -1,4 +1,5 @@
-﻿<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+﻿<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
 	<Script file="Option.lua"/>
 	
 	<Font name="FontTemplateL" font="Fonts\2002.TTF" virtual="true">
@@ -385,7 +386,7 @@
 		<Size x="32" y="32"/>
 		<Layers>
 			<Layer level="BACKGROUND">
-				<Texture name="$parentBackground" urgency="5" file="Interface\SpellBook\SpellBook-SkillLineTab">
+				<Texture name="$parentBackground" file="Interface\SpellBook\SpellBook-SkillLineTab">
 					<TexCoords top="0" bottom="1" left="0" right= "-1"/>
 					<Size x="64" y="64"/>
 					<Anchors>
@@ -398,7 +399,7 @@
 		</Layers>
 		<NormalTexture/>
 		<HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
-		<CheckedTexture urgency="5" file="Interface\Buttons\CheckButtonHilight" alphaMode="ADD"/>
+		<CheckedTexture file="Interface\Buttons\CheckButtonHilight" alphaMode="ADD"/>
 	</CheckButton>
 
 	<CheckButton name="HDH_AT_OP_CheckButtonTemplate" virtual="true" inherits="OptionsBaseCheckButtonTemplate">
@@ -688,7 +689,6 @@
 				if _G[self:GetName().."TextID"]:GetText() then
 					local c = _G[self:GetName().."CheckButtonIsItem"]:GetChecked()
 					local id = _G[self:GetName().."TextID"]:GetText()
-					if id == "0" then return end
 					local link = c and select(2,GetItemInfo(id)) or GetSpellLink(id)
 					if not link then return end
 					GameTooltip_SetDefaultAnchor(GameTooltip, self);
@@ -719,35 +719,37 @@
 				</FontString>
 			</Layer>
 		</Layers>
-		<EditBox name="$parentEditBox" inherits="InputBoxTemplate" enableMouse="true" autoFocus="false">
-			<Size>
-				<AbsDimension x="50" y="26"/>
-			</Size>
-			<Anchors>
-				<Anchor point="LEFT" relativePoint="LEFT" relativeTo="$parentButtonUp">
-					<Offset>
-						<AbsDimension x="0" y="0"/>
-					</Offset>
-				</Anchor>
-			</Anchors>
-			<Scripts>
-				<OnEnterPressed>HDH_OnEnterPressed(self)</OnEnterPressed>
-				<OnEscapePressed>self:ClearFocus()</OnEscapePressed>
-			</Scripts>
-		</EditBox>
-		<Button name="$parentButton" inherits="HDH_AT_ButtonTemplate" text="ok">
-			<Size>
-				<AbsDimension x="100" y="26"/>
-			</Size>
-			<Anchors>
-				<Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parent">
-					<Offset><AbsDimension x="0" y="0"/></Offset>
-				</Anchor>
-			</Anchors>
-			<Scripts>
-				<OnClick></OnClick>
-			</Scripts>
-		</Button>	
+		<Frames>
+			<EditBox name="$parentEditBox" inherits="InputBoxTemplate" enableMouse="true" autoFocus="false">
+				<Size>
+					<AbsDimension x="50" y="26"/>
+				</Size>
+				<Anchors>
+					<Anchor point="LEFT" relativePoint="LEFT" relativeTo="$parentButtonUp">
+						<Offset>
+							<AbsDimension x="0" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnEnterPressed>HDH_OnEnterPressed(self)</OnEnterPressed>
+					<OnEscapePressed>self:ClearFocus()</OnEscapePressed>
+				</Scripts>
+			</EditBox>
+			<Button name="$parentButton" inherits="HDH_AT_ButtonTemplate" text="ok">
+				<Size>
+					<AbsDimension x="100" y="26"/>
+				</Size>
+				<Anchors>
+					<Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parent">
+						<Offset><AbsDimension x="0" y="0"/></Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick></OnClick>
+				</Scripts>
+			</Button>	
+		</Frames>
 	</Frame>
 
 	<Slider name="AT_SliderTemplate" inherits="OptionsSliderTemplate" virtual ="true" >
@@ -996,7 +998,7 @@
 						<FontString name="$parentTextUnit" inherits="GameFontNormal_White_12" justifyH ="LEFT"  text="" hidden="false">
 							<Size><AbsDimension x="150" y="26"/></Size>
 							<Anchors>
-								<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentTextTracker">
+								<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="TalentText">
 									<Offset><AbsDimension x="0" y="0"/></Offset>
 								</Anchor>
 							</Anchors>
@@ -1979,7 +1981,7 @@
 										</Anchors>
 										<Frames>
 											
-											<CheckButton name="$parentCheckButtonEachSet" inherits="OptionsCheckButtonTemplate" hidden="false">
+											<CheckButton name="$parentCheckButtonEachSet" inherits="OptionsBaseCheckButtonTemplate" hidden="false">
 												<HitRectInsets>
 													<AbsInset left="0" right="-70" top="0" bottom="0"/>
 												</HitRectInsets>
@@ -1989,7 +1991,7 @@
 													</Anchor>
 												</Anchors>
 												<Scripts>
-													<OnLoad> getglobal(self:GetName().."Text"):SetText("개별 설정 사용") </OnLoad>
+													<OnLoad> </OnLoad>
 													<OnClick> HDH_AT_OP_OnChecked(self, self:GetChecked()) </OnClick>
 													<OnEnter>
 														GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
@@ -2413,7 +2415,7 @@
 														</Scripts>     
 													</Slider>
 													 
-													<Slider name="$parentSliderOffAlpha" inherits="AT_SliderTemplate" minValue="0" maxValue="100" setValueStep="0.1">
+													<Slider name="$parentSliderOffAlpha" inherits="AT_SliderTemplate" minValue="0" maxValue="100" valueStep="0.1">
 														<Anchors>
 															<Anchor point="TOP" relativeTo="$parentSliderOnAlpha" relativePoint="BOTTOM" x="0" y="-30"/>
 														</Anchors>
@@ -3113,7 +3115,7 @@
 														</Anchors>
 													</Frame>
 													
-													<Slider name="$parentSliderPowerBarWidth" inherits="AT_SliderTemplate" minValue="10" maxValue="300" setValueStep="1">
+													<Slider name="$parentSliderPowerBarWidth" inherits="AT_SliderTemplate" minValue="10" maxValue="300" valueStep="1">
 														<Anchors>
 															<Anchor point="TOPLEFT" relativeTo="$parentDDMBarTexture" relativePoint="BOTTOMLEFT">
 															<Offset><AbsDimension x="20" y="-30"/></Offset>
@@ -3142,7 +3144,7 @@
 														</Scripts>     
 													</Slider>
 													
-													<Slider name="$parentSliderPowerBarHeight" inherits="AT_SliderTemplate" minValue="10" maxValue="300" setValueStep="1">
+													<Slider name="$parentSliderPowerBarHeight" inherits="AT_SliderTemplate" minValue="10" maxValue="300" valueStep="1">
 														<Anchors>
 															<Anchor point="TOP" relativeTo="$parentSliderPowerBarWidth" relativePoint="BOTTOM">
 																<Offset x="0" y="-30"/>
@@ -3278,7 +3280,7 @@
 														</Scripts>     
 													</Slider>
 													
-													<Slider name="$parentSliderBarNameMarginLeft" inherits="AT_SliderTemplate" minValue="2" maxValue="300" setValueStep="1">
+													<Slider name="$parentSliderBarNameMarginLeft" inherits="AT_SliderTemplate" minValue="2" maxValue="300" valueStep="1">
 														<Anchors>
 															<Anchor point="TOP" relativeTo="$parentSliderFont" relativePoint="BOTTOM">
 															<Offset><AbsDimension x="0" y="-30"/></Offset>
@@ -3307,7 +3309,7 @@
 														</Scripts>     
 													</Slider>
 													
-													<Slider name="$parentSliderBarNameMarginRight" inherits="AT_SliderTemplate" minValue="2" maxValue="300" setValueStep="1">
+													<Slider name="$parentSliderBarNameMarginRight" inherits="AT_SliderTemplate" minValue="2" maxValue="300" valueStep="1">
 														<Anchors>
 															<Anchor point="TOP" relativeTo="$parentSliderBarNameMarginLeft" relativePoint="BOTTOM">
 																<Offset x="0" y="-30"/>
@@ -3597,7 +3599,7 @@
 										</Scripts>
 									</CheckButton>
 								
-									<EditBox name ="$parentEB" inherits="InputBoxTemplate" autoFocus="false" numberic="true">
+									<EditBox name ="$parentEB" inherits="InputBoxTemplate" autoFocus="false" numeric="true">
 										<Size><AbsDimension x="80" y="24"/></Size>
 										<Anchors>
 											<Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parentText1">
@@ -3613,7 +3615,7 @@
 										</Scripts>
 									</EditBox>
 									
-									<EditBox name ="$parentEB2" inherits="InputBoxTemplate" autoFocus="false" numberic="true">
+									<EditBox name ="$parentEB2" inherits="InputBoxTemplate" autoFocus="false" numeric="true">
 										<Size><AbsDimension x="80" y="24"/></Size>
 										<Anchors>
 											<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentEB">
@@ -3628,7 +3630,7 @@
 										</Scripts>
 									</EditBox>
 									
-									<EditBox name ="$parentEB3" inherits="InputBoxTemplate" autoFocus="false" numberic="true" hidden="true" >
+									<EditBox name ="$parentEB3" inherits="InputBoxTemplate" autoFocus="false" numeric="true" hidden="true" >
 										<Size><AbsDimension x="80" y="24"/></Size>
 										<Anchors>
 											<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentEB2">
@@ -4442,7 +4444,7 @@
 						</Scripts>
 					</CheckButton>
 					
-					<Slider name="$parentSliderMaxTime" inherits="AT_SliderTemplate" minValue="-1" maxValue="3000" setValueStep="1">
+					<Slider name="$parentSliderMaxTime" inherits="AT_SliderTemplate" minValue="-1" maxValue="3000" valueStep="1">
 						<Anchors>
 							<Anchor point="LEFT" relativeTo="$parentCheckButtonDesaturationOutRange" relativePoint="LEFT">
 							<Offset><AbsDimension x="5" y="0"/></Offset>

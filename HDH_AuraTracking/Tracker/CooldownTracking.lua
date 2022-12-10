@@ -133,8 +133,6 @@ do
 		f.elapsed = 0
 		spell.curTime = GetTime();
 		spell.remaining = spell.endTime - spell.curTime;
-
-		
 		if spell.remaining > HDH_C_TRACKER.EndCooldown and spell.duration > 0 then
 			if not spell.isCharging and spell.duration > HDH_C_TRACKER.GlobalCooldown then
 				tracker:UpdateTimeText(f.timetext, spell.remaining);

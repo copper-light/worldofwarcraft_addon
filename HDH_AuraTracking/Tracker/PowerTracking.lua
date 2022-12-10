@@ -634,7 +634,7 @@ do -- HDH_POWER_TRACKER class
 			end
 			
 			self.frame:SetScript("OnEvent", self.OnEvent)
-			self.frame:RegisterUnitEvent('UNIT_POWER_UPDATE',"player")
+			self.frame:RegisterUnitEvent('UNIT_POWER',"player")
 			self.frame:RegisterUnitEvent('UNIT_MAXPOWER',"player")
 			-- GetPowerRegen
 			self:Update()

@@ -197,65 +197,14 @@ do -- HDH_COMBO_POINT_TRACKER class
 				f:Show()
 				if self.option.bar.enable and f.bar then
 					f.bar:SetMinMaxValues(0,1);
-					f.bar:SetValue(f.spell.v1 and f.spell.v1/10 or 1);
+					f.bar:SetValue(1);
 				end
+				
 				if self.option.base.merge_power_icon then
 					f.v1:SetText(f.spell.v1);
-					f.cd:Hide()
 				else
-					--f.icon:SetPoint('BOTTOMRIGHT', f.iconframe, 'BOTTOMRIGHT', 0, 0)
-					if HDH_POWER[self.type].power_index == 7 then
-						if (f.spell.v1) and (f.spell.v1 > 0) then
-							local power_mode = UnitPowerDisplayMod(Enum.PowerType.SoulShards)
-							if(not f.iconOff) then 
-								f.iconOff = f.iconframe:CreateTexture(nil, 'BACKGROUND') 
-								f.iconOff:SetTexture(f.icon:GetTexture())
-								f.iconOff:SetPoint('TOPLEFT', f.iconframe, 'TOPLEFT')
-								f.iconOff:SetPoint('TOPRIGHT', f.iconframe, 'TOPRIGHT')
-								f.iconOff:SetAlpha(self.option.icon.off_alpha)
-								f.iconOff:SetDesaturated(1)
-								f.iconOff.spark = f.iconframe:CreateTexture(nil, "OVERLAY");
-								f.iconOff.spark:SetBlendMode("ADD");
-								f.iconOff.spark:SetTexture("Interface\\AddOns\\HDH_AuraTracking\\Texture\\UI-CastingBar-Spark_v");	
-								f.iconOff.spark:SetSize(size, 19);
-								f.iconOff.spark:SetPoint('CENTER', f.iconOff, 'BOTTOM')
-							end
-
-							f.icon:ClearAllPoints()
-							f.icon:SetPoint('BOTTOMLEFT', f.iconframe, 'BOTTOMLEFT')
-							f.icon:SetPoint('BOTTOMRIGHT', f.iconframe, 'BOTTOMRIGHT')
-							f.icon:SetTexCoord(0.08, 0.92, 0.08 + (0.84 * (1-f.spell.v1/power_mode)), 0.92)
-							f.icon:SetHeight(size * (f.spell.v1/power_mode))
-
-							f.iconOff:SetTexCoord(0.08, 0.92, 0.08, 0.92 - (0.84 * (f.spell.v1/power_mode)))
-							f.iconOff:SetHeight(size * (1-(f.spell.v1/power_mode)))
-							f.iconOff:Show() 
-							f.iconOff.spark:Show()
-							-- f.cd:Show()
-							-- f.cd:SetMinMaxValues(0, power_mode)
-							-- f.cd:SetValue(power_mode - f.spell.v1)
-							if f.spell.v1 == 0 then f.icon:SetDesaturated(1)
-							else f.icon:SetDesaturated(nil) end
-							f.icon:SetAlpha(self.option.icon.off_alpha)
-							f.border:SetAlpha(self.option.icon.off_alpha)
-							f.border:SetVertexColor(0,0,0)
-						else
-							f.icon:SetPoint('TOPLEFT', f.iconframe, 'TOPLEFT')
-							f.icon:SetPoint('TOPRIGHT', f.iconframe, 'TOPRIGHT')
-							f.icon:SetHeight(size)
-							f.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-							
-							if (f.iconOff) then f.iconOff:Hide() f.iconOff.spark:Hide() end
-						end
-						--f.icon:SetDesaturated(1)
-					end
-					if(not f.spell.showValue) then
-						f.v1:SetText("");
-					else
-						f.v1:SetText(f.spell.v1 and f.spell.v1 == 0 and "" or f.spell.v1);
-					end
+					f.v1:SetText("");
 				end
-
 			else
 				if k <= UnitPowerMax('player', HDH_POWER[self.type].power_index) then 
 					if f.spell.always then 
@@ -275,8 +224,6 @@ do -- HDH_COMBO_POINT_TRACKER class
 							f.bar:SetMinMaxValues(0,1);
 							f.bar:SetValue(0);
 						end
-
-						if (f.iconOff) then f.iconOff.spark:Hide() end
 					else
 						f:Hide();
 					end
@@ -295,11 +242,9 @@ do -- HDH_COMBO_POINT_TRACKER class
 		local iconf;
 		local spell;
 		local ret = 0;
+		
 		local power = UnitPower('player', HDH_POWER[self.type].power_index, true);
 		local power_max = UnitPowerMax('player', HDH_POWER[self.type].power_index);
-		if HDH_POWER[self.type].power_index == 7 and power > 0 then  -- warlock
-			power = power / UnitPowerDisplayMod(Enum.PowerType.SoulShards)
-		end
 		
 		if self.option.base.merge_power_icon then -- 아이콘 하나로
 			iconf = self.frame.icon[1]
@@ -341,7 +286,7 @@ do -- HDH_COMBO_POINT_TRACKER class
 					if not iconf.spell then
 						iconf.spell = {}
 					end
-					iconf:SetParent(self.frame) 
+					 iconf:SetParent(self.frame) 
 					iconf.spell.duration = 0
 					iconf.spell.count = 0
 					iconf.spell.remaining = 0
@@ -361,15 +306,10 @@ do -- HDH_COMBO_POINT_TRACKER class
 					iconf.icon:SetTexture(auraList[1].Texture);
 					if power >= i then
 						iconf.spell.isUpdate = true
-						iconf.spell.v1 = nil;
+						iconf.spell.v1 = power;
 					else
-						if (power - i + 1) > 0 then
-							iconf.spell.isUpdate = true
-							iconf.spell.v1 = (power - i + 1) * 10;
-						else
-							iconf.spell.isUpdate = false
-							iconf.spell.v1 = 0;
-						end
+						iconf.spell.isUpdate = false
+						iconf.spell.v1 = 0;
 					end
 					ret = ret + 1;
 				end
@@ -410,7 +350,7 @@ do -- HDH_COMBO_POINT_TRACKER class
 		-- end
 		if self:IsHaveData(self:GetSpec()) and not self:IsIgnoreSpellByTalentSpell(auraList[1]) then
 			self.frame:SetScript("OnEvent", self.OnEvent)
-			self.frame:RegisterUnitEvent('UNIT_POWER_UPDATE',"player")
+			self.frame:RegisterUnitEvent('UNIT_POWER',"player")
 			self.frame:RegisterUnitEvent('UNIT_MAXPOWER',"player")
 			ret = self:Update()
 		else
@@ -434,7 +374,7 @@ do -- HDH_COMBO_POINT_TRACKER class
 	
 	function HDH_COMBO_POINT_TRACKER:OnEvent(event, unit, powerType)
 		if self == nil or self.parent == nil then return end
-		if (event == "UNIT_POWER_UPDATE" or event == 'UNIT_MAXPOWER') and (HDH_POWER[self.parent.type].power_type == powerType) then 
+		if (event == "UNIT_POWER" or event == 'UNIT_MAXPOWER') and (HDH_POWER[self.parent.type].power_type == powerType) then 
 			if not UI_LOCK then
 				self.parent:Update()
 			end

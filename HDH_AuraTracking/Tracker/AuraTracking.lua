@@ -140,7 +140,7 @@ local function UpdateCooldown(f, elapsed)
 	local spell = f.spell;
 	local tracker = f:GetParent().parent;
 	if not spell and not tracker then return end
-
+	
 	f.elapsed = (f.elapsed or 0) + elapsed;
 	if f.elapsed < HDH_TRACKER.ONUPDATE_FRAME_TERM then  return end  -- 30프레임
 	f.elapsed = 0
@@ -177,26 +177,17 @@ end
 
 function HDH_TRACKER:moveSpark(tracker,f, spell)
 	if not tracker.option.bar.show_spark then return end
-	local value;
 	if tracker.option.bar.fill_bar == tracker.option.bar.reverse_progress then
 		if f.bar:GetOrientation() == "HORIZONTAL" then
-			value = f.bar:GetWidth() * (spell.remaining/(spell.endTime-spell.startTime));
-			if f.bar:GetWidth() < value then value = f.bar:GetWidth() end
-			f.bar.spark:SetPoint("CENTER", f.bar,"LEFT", value, 0);
+			f.bar.spark:SetPoint("CENTER", f.bar,"LEFT", f.bar:GetWidth() * (spell.remaining/(spell.endTime-spell.startTime)), 0);
 		else
-			value = f.bar:GetHeight() * (spell.remaining/(spell.endTime-spell.startTime));
-			if f.bar:GetHeight() < value then value = f.bar:GetHeight() end
-			f.bar.spark:SetPoint("CENTER", f.bar,"BOTTOM", 0, value);
+			f.bar.spark:SetPoint("CENTER", f.bar,"BOTTOM", 0, f.bar:GetHeight() * (spell.remaining/(spell.endTime-spell.startTime)));
 		end
 	else
 		if f.bar:GetOrientation() == "HORIZONTAL" then
-			value = f.bar:GetWidth() * (spell.remaining/(spell.endTime-spell.startTime));
-			if f.bar:GetWidth() < value then value = f.bar:GetWidth() end
-			f.bar.spark:SetPoint("CENTER", f.bar,"RIGHT", -value, 0);
+			f.bar.spark:SetPoint("CENTER", f.bar,"RIGHT", -f.bar:GetWidth() * (spell.remaining/(spell.endTime-spell.startTime)), 0);
 		else
-			value = f.bar:GetHeight() * (spell.remaining/(spell.endTime-spell.startTime));
-			if f.bar:GetHeight() < value then value = f.bar:GetHeight() end
-			f.bar.spark:SetPoint("CENTER", f.bar,"TOP", 0, -value);
+			f.bar.spark:SetPoint("CENTER", f.bar,"TOP", 0, -f.bar:GetHeight() * (spell.remaining/(spell.endTime-spell.startTime)));
 		end
 	end
 end
@@ -1132,7 +1123,7 @@ do -- TRACKER Class
 		self.frame.icon[idx]:SetScript('OnMouseDown', nil)
 		self.frame.icon[idx]:SetScript('OnMouseUp', nil)
 		self.frame.icon[idx]:SetScript('OnUpdate', nil)
-		self.frame.icon[idx]:RegisterForDrag(nil)
+		self.frame.icon[idx]:RegisterForDrag()
 		self.frame.icon[idx]:EnableMouse(false);
 		if self.frame.icon[idx].bar then 
 			self.frame.icon[idx].bar:Hide();
@@ -1630,7 +1621,8 @@ do -- TRACKER Class
 		local ret = 0;
 		local f
 		for i = 1, 40 do 
-			name, _, count, dispelType, duration, endTime, caster, _, _, id, _, isBossDebuff, _,_,_, v1, v2, v3 = UnitAura(self.unit, i, self.filter)
+			-- name, icon, count, dispelType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod
+			name, _, count, dispelType, duration, endTime, caster, _, _, id = UnitAura(self.unit, i, self.filter)
 			if not id then break end
 			f = self.frame.pointer[tostring(id)] or self.frame.pointer[name]
 			if f and f.spell then
@@ -1640,7 +1632,7 @@ do -- TRACKER Class
 					-- if spell.v1_hp then
 						-- spell.v1 = math.ceil((v2 / UnitHealthMax(self.unit)) *100)
 					-- else
-						spell.v1 = v1; 
+						spell.v1 = v2; 
 					-- end
 				else -- 시간차
 					-- if spell.v1_hp then
@@ -1649,7 +1641,7 @@ do -- TRACKER Class
 						spell.v1 = v3; 
 					-- end
 				end
-				spell.count = spell.count + count
+				spell.count = spell.count + (count)
 				spell.id = id
 				spell.dispelType = dispelType
 				spell.overlay = (spell.overlay or 0) + 1
@@ -1670,7 +1662,7 @@ do -- TRACKER Class
 		local ret = 1;
 		local f
 		for i = 1, 40 do 
-			name, icon, count, dispelType, duration, endTime, caster, _, _, id, _, isBossDebuff = UnitAura(self.unit, i, self.filter)
+			name, icon, count, dispelType, duration, endTime, caster, _, _, id, canApplyAura, isBossDebuff = UnitAura(self.unit, i, self.filter)
 			if not id then break end
 			-- f = self.frame.pointer[name];
 			-- if not f then 
@@ -2036,6 +2028,55 @@ local function HDH_UNIT_AURA(self)
 	end
 end
 
+local function asCheckTalent()
+
+	-- ClassTalentFrame.TalentsTab.LoadoutDropDown:GetSelectionID();
+	local specID = PlayerUtil.GetCurrentSpecID();
+
+	local ids = C_ClassTalents.GetConfigIDsBySpecID(specID);
+
+	
+
+	configInfo = C_Traits.GetConfigInfo(C_ClassTalents.GetActiveConfigID())
+	print(C_Traits.GetConfigInfo(C_ClassTalents.GetActiveConfigID()).name)
+	
+	
+	for i, v in pairs(configInfo) do
+		print(i, v) 
+	end
+
+	for i, v in pairs(ids) do
+		print('----')
+		print(i, v)
+		for k,vv in pairs(C_Traits.GetConfigInfo(v)) do
+			print(k,vv) 
+		end
+		
+	end
+  
+    -- local configID = C_ClassTalents.GetActiveConfigID();
+	-- C_ClassTalents.LoadConfig(configID, true);
+    -- local configInfo = C_Traits.GetConfigInfo(configID);
+    -- local treeID = configInfo.treeIDs[1];
+
+    -- local nodes = C_Traits.GetTreeNodes(treeID);
+
+    -- for _, nodeID in ipairs(nodes) do
+    --     local nodeInfo = C_Traits.GetNodeInfo(configID, nodeID);
+    --     if nodeInfo.currentRank and nodeInfo.currentRank > 0 then
+    --         local entryID = nodeInfo.activeEntry and nodeInfo.activeEntry.entryID and nodeInfo.activeEntry.entryID;
+    --         local entryInfo = entryID and C_Traits.GetEntryInfo(configID, entryID);
+    --         local definitionInfo = entryInfo and entryInfo.definitionID and C_Traits.GetDefinitionInfo(entryInfo.definitionID);
+
+    --         if definitionInfo ~= nil then
+    --             local talentName = TalentUtil.GetTalentName(definitionInfo.overrideName, definitionInfo.spellID);
+	-- 			print(string.format("%s %d/%d", talentName, nodeInfo.currentRank, nodeInfo.maxRanks), #configInfo.treeIDs, treeID, configID, entryInfo);
+				
+    --         end
+    --     end
+    -- end
+end
+
 local function PLAYER_ENTERING_WORLD()
 	if not HDH_TRACKER.IsLoaded then 
 		print('|cffffff00HDH - AuraTracking |cffffffff(Setting: /at, /auratracking, /ㅁㅅ)')
@@ -2044,6 +2085,8 @@ local function PLAYER_ENTERING_WORLD()
 		HDH_AT_ADDON_Frame:RegisterEvent('PLAYER_REGEN_DISABLED')
 		HDH_AT_ADDON_Frame:RegisterEvent('PLAYER_REGEN_ENABLED')
 		HDH_AT_ADDON_Frame:RegisterEvent('ACTIVE_TALENT_GROUP_CHANGED')
+		HDH_AT_ADDON_Frame:RegisterEvent('TRAIT_TREE_CHANGED') -- 특성 빌드 설정 업데이트 하려고 할때 
+		HDH_AT_ADDON_Frame:RegisterEvent('TRAIT_CONFIG_UPDATED') -- 특성 빌드 설정 변경 완료 됐을때
 	end
 
 	HDH_TRACKER.InitVaribles()
@@ -2082,7 +2125,10 @@ end
 
 -- 이벤트 콜백 함수
 local function OnEvent(self, event, ...)
+	-- print( event, ...)
+	
 	if event =='ACTIVE_TALENT_GROUP_CHANGED' then
+		print(event, ...)
 		HDH_AT_UTIL.IsTalentSpell(nil,nil,true);
 		for i = 1, #DB_FRAME_LIST do
 			if HDH_TRACKER.Get(DB_FRAME_LIST[i].name) then
@@ -2111,8 +2157,12 @@ local function OnEvent(self, event, ...)
 		C_Timer.After(3, PLAYER_ENTERING_WORLD)
 		C_Timer.After(6, function() PLAY_SOUND = true end)
 	elseif event =="GET_ITEM_INFO_RECEIVED" then
+	elseif event =="TRAIT_CONFIG_UPDATED" then
+		print(asCheckTalent())
 	end
 end
+
+
 
 -- 애드온 로드 시 가장 먼저 실행되는 함수
 local function OnLoad(self)
@@ -2281,3 +2331,9 @@ do
 		end
 	end
 end
+
+
+hooksecurefunc(C_ClassTalents, "LoadConfig", function(id, apply)
+	print('hook', C_Traits.GetConfigInfo(id).name, apply)
+	-- hook 치고 apply 가 false 가 안들어오고 TRAIT_CONFIG_UPDATED 가 콜되면 특성 변경으로 인식
+end)

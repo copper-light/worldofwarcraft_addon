@@ -1,8 +1,8 @@
-﻿## Interface: 80000
+﻿## Interface: 70100
 ## Title: HDH_AuraTracking
 ## Author: hdh
 ## Notes: 설정창 명령어 /at, /auratracking
-## Version: 801.4
+## Version: 710.0
 ## SavedVariables: DB_PROFILE
 ## SavedVariablesPerCharacter: DB_AURA, DB_OPTION, DB_FRAME_LIST
 
