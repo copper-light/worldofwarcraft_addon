@@ -2739,6 +2739,8 @@ end
 function HDH_AT_OP_OnChecked(self, checked)
 	local idx = GetTrackerIndex()
 	local db = HDH_AT_OP_GetTrackerInfo(idx)
+	if (db == nil) then return end
+
 	local name = db.name
 	local unit = db.unit
 	local type = db.type

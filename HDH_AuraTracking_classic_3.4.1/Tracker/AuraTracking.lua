@@ -930,24 +930,28 @@ do -- TRACKER Class
 		end
 		self:UpdateArtBar(f);
 		local counttext = f.counttext
+		local r, g, b = unpack(op_font.countcolor)
 		counttext:SetFont(HDH_TRACKER.FONT_STYLE, op_font.countsize, "OUTLINE")
 		--counttext:SetTextHeight(op_font.countsize)
-		counttext:SetTextColor(unpack(op_font.countcolor))
+		counttext:SetTextColor(r, g, b)
 		self:ChangeFontLocation(f, counttext, op_font.count_location)
 		
 		local v1Text = f.v1
 		v1Text:SetFont(HDH_TRACKER.FONT_STYLE, op_font.v1_size, "OUTLINE")
-		v1Text:SetTextColor(unpack(op_font.v1_color))
+		r, g, b = unpack(op_font.v1_color)
+		v1Text:SetTextColor(r, g, b)
 		self:ChangeFontLocation(f, v1Text, op_font.v1_location)
 		
 		local v2Text = f.v2
 		v2Text:SetFont(HDH_TRACKER.FONT_STYLE, op_font.v2_size, "OUTLINE")
-		v2Text:SetTextColor(unpack(op_font.v2_color))
+		r, g, b = unpack(op_font.v2_color)
+		v2Text:SetTextColor(r, g, b )
 		self:ChangeFontLocation(f, v2Text, op_font.v2_location)
 		
 		local timetext = f.timetext
 		timetext:SetFont(HDH_TRACKER.FONT_STYLE, op_font.fontsize, "OUTLINE")
-		timetext:SetTextColor(unpack(op_font.textcolor))
+		r, g, b = unpack(op_font.textcolor)
+		timetext:SetTextColor(r, g, b)
 		self:ChangeFontLocation(f, timetext, op_font.cd_location)
 		
 		if op_font.show_cooldown then f.timetext:Show()
