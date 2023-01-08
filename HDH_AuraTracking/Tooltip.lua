@@ -1,7 +1,7 @@
 ﻿-- spell tooltip
-local function addLine(tooltip, IDtype, id)
+local function addLine(tooltip, id)
     local found = false
-	local idText = IDtype.."ID: |cffffffff" .. id
+	local idText = "ID: |cffffffff" .. id
 	
     -- Check if we already added to this tooltip. Happens on the talent frame
     for i = 1,15 do
@@ -19,21 +19,21 @@ local function addLine(tooltip, IDtype, id)
 end
 
 hooksecurefunc(GameTooltip, "SetUnitBuff", function(self, ...)
-	if not DB_OPTION.tooltip_id_show then return end
-    local id = select(11, UnitBuff(...))
-    if id then addLine(self, "주문", id) end
+	if not HDH_AT_DB.show_tooltip_id then return end
+    local id = select(10, UnitBuff(...))
+    if id then addLine(self, id) end
 end)
 
 hooksecurefunc(GameTooltip, "SetUnitDebuff", function(self,...)
-	if not DB_OPTION.tooltip_id_show then return end
-    local id = select(11, UnitDebuff(...))
-    if id then addLine(self, "주문", id) end
+	if not HDH_AT_DB.show_tooltip_id then return end
+    local id = select(10, UnitDebuff(...))
+    if id then addLine(self, id) end
 end)
 
 hooksecurefunc(GameTooltip, "SetUnitAura", function(self,...)
-	if not DB_OPTION.tooltip_id_show then return end
-    local id = select(11, UnitAura(...))
-    if id then addLine(self, "주문", id) end
+	if not HDH_AT_DB.show_tooltip_id then return end
+    local id = select(10, UnitAura(...))
+    if id then addLine(self, id) end
 end)
 
 -- GameTooltip:HookScript("OnTooltipSetItem", function(self)
@@ -45,8 +45,57 @@ end)
 -- 	end
 -- end)
 
+hooksecurefunc(GameTooltip, "SetAction", function(self, ...)
+	if not HDH_AT_DB.show_tooltip_id then return end
+    local id = select(2, self:GetSpell())
+
+    if not id then
+        id = select(3, self:GetItem())
+    end
+
+    if id then addLine(self, id) end
+end)
+
+hooksecurefunc(GameTooltip, "SetSpellByID", function(self,...)
+	if not HDH_AT_DB.show_tooltip_id then return end
+    local id = select(1, ...)
+    if id then addLine(self, id) end
+end)
+
+hooksecurefunc(GameTooltip, "SetSpellBookItem", function(self,...)
+	if not HDH_AT_DB.show_tooltip_id then return end
+    local id = select(2, self:GetSpell())
+    if id then addLine(self, id) end
+end)
+
+hooksecurefunc(GameTooltip, "SetUnitDebuffByAuraInstanceID", function(self,...)
+	if not HDH_AT_DB.show_tooltip_id then return end
+    local id = C_UnitAuras.GetAuraDataByAuraInstanceID(...).spellId
+    if id then addLine(self, id) end
+    
+end)
+
+hooksecurefunc(GameTooltip, "SetUnitBuffByAuraInstanceID", function(self,...)
+	if not HDH_AT_DB.show_tooltip_id then return end
+    local id = C_UnitAuras.GetAuraDataByAuraInstanceID(...).spellId
+    if id then addLine(self, id) end
+end)
+
+
 -- GameTooltip:HookScript("OnTooltipSetSpell", function(self)
--- 	if not DB_OPTION.tooltip_id_show then return end
+-- 	if not HDH_AT_DB.show_tooltip_id then return end
 --     local id = select(3, self:GetSpell())
 --     if id then addLine(self, "주문", id) end
 -- end)
+
+hooksecurefunc(GameTooltip, 'SetBagItem', function(self, ...)
+    if not HDH_AT_DB.show_tooltip_id then return end
+    local id = select(3, self:GetItem())
+    if id then addLine(self, id) end
+ end)
+
+hooksecurefunc(GameTooltip, 'SetItemByID', function(self, ...)
+    print("SetItemByID",  ...)
+end)
+
+ 

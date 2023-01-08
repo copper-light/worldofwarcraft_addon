@@ -44,51 +44,6 @@
 		</FontHeight>
 	</Font>
 	
-	<Button name="HDH_AT_ButtonTemplate" virtual="true">
-		<Size><AbsDimension x="90" y="22" /></Size>
-		<Layers>
-			<Layer level="BACKGROUND">
-				<Texture name="$parentBgLine1" hidden="true">
-					<Color r="0" g="0" b="0" a="0.5"/>
-					<Size><AbsDimension x="3" y="35" /></Size>
-					<Anchors>
-						<Anchor point="TOPRIGHT" x="-2" y="0"/>
-						<Anchor point="BOTTOMRIGHT" x="-2" y="0"/>
-					</Anchors>
-				</Texture>
-				<Texture name="$parentBgLine2" hidden="true">
-					<Color r="1" g="0.8" b="0" a="0.8"/>
-					<Size><AbsDimension x="5" y="33" /></Size>
-					<Anchors>
-						<Anchor point="TOPLEFT" x="2" y="-2"/>
-						<Anchor point="BOTTOMRIGHT" x="-2" y="2"/>
-					</Anchors>
-				</Texture>
-			</Layer>
-		</Layers>
-		<ButtonText name="$parentText"/>
-		<NormalFont style="GameFontNormal_White_12"/>
-		<HighlightFont style="GameFontHighlight"/>
-		<DisabledFont style="GameFontDisable"/>
-		<NormalTexture>
-			<Color r="1" g="0.8" b="0" a="0.8"/>
-			<Anchors>
-				<Anchor point="TOPLEFT" x="2" y="-2"/>
-				<Anchor point="BOTTOMRIGHT" x="-2" y="2"/>
-			</Anchors>					
-		</NormalTexture>
-		<HighlightTexture alphaMode="ADD" file="Interface\HELPFRAME\HelpFrameButton-Highlight">
-			<TexCoords left="0" right="1" top="0.1" bottom="0.5" />
-		</HighlightTexture>
-		<DisabledTexture>
-			<Color r="0.5" g="0.5" b="0.5" a="0.8"/>
-			<Anchors>
-				<Anchor point="TOPLEFT" x="2" y="-2"/>
-				<Anchor point="BOTTOMRIGHT" x="-2" y="2"/>
-			</Anchors>
-		</DisabledTexture>
-	</Button>
-	
 	<Button name="HDH_AT_ButtonTemplate2" virtual="true">
 		<Size><AbsDimension x="90" y="22" /></Size>
 		<Layers>

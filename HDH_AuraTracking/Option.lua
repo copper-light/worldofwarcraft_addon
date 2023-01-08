@@ -3269,9 +3269,8 @@ end
 
 -----------------------------------------
 ---------------------
-SLASH_AURATRACKINGT1 = '/at'
-SLASH_AURATRACKINGT2 = '/auratracking'
-SLASH_AURATRACKINGT3 = '/ㅁㅅ'
+SLASH_AURATRACKINGT1 = '/at1'
+SLASH_AURATRACKINGT3 = '/ㅁㅅ1'
 SlashCmdList["AURATRACKINGT"] = function (msg, editbox)
 	if OptionFrame:IsShown() then 
 		OptionFrame:Hide()
