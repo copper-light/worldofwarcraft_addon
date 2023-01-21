@@ -1,4 +1,5 @@
-# AuraTracker 로 이름 변경
+# HDH_AuraTracker (AuraTracking)
+- 오라, 스킬, 토템, 직업자원을 별도의 아이콘으로 화면에 표시하는 기능
 - https://github.com/copper-light/AuraTracker 으로 이관
 
 # HDH_UnitFrame
